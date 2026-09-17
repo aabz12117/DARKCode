@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width,
+                   initial-scale=1,
+                   maximum-scale=1,
+                   user-scalable=no,
+                   viewport-fit=cover">
+
+    <meta name="theme-color" content="#000000">
+    <meta name="color-scheme" content="dark">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <meta name="robots" content="noindex, nofollow, noarchive">
+
+    <title>BlackCode</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+
+            width: 100%;
+            height: 100%;
+            min-height: 100%;
+
+            background: #000;
+            overflow: hidden;
+
+            overscroll-behavior: none;
+        }
+
+        body {
+            position: fixed;
+            inset: 0;
+
+            width: 100vw;
+
+            height: 100vh;
+            height: 100dvh;
+
+            background: #000;
+        }
+
+        #app {
+            position: fixed;
+            inset: 0;
+
+            width: 100vw;
+
+            height: 100vh;
+            height: 100dvh;
+
+            overflow: hidden;
+
+            background: #000;
+        }
+
+        #site {
+            position: absolute;
+            inset: 0;
+
+            display: block;
+
+            width: 100%;
+            height: 100%;
+
+            margin: 0;
+            padding: 0;
+            border: 0;
+
+            background: #000;
+
+            opacity: 0;
+
+            transition: opacity 0.25s ease;
+        }
+
+        #site.ready {
+            opacity: 1;
+        }
+
+        /* =========================
+           LOADING
+        ========================== */
+
+        #loading {
+            position: fixed;
+            inset: 0;
+
+            z-index: 1000;
+
+            display: flex;
+            flex-direction: column;
+
+            align-items: center;
+            justify-content: center;
+
+            gap: 18px;
+
+            width: 100%;
+            height: 100%;
+
+            background: #000;
+            color: #fff;
+
+            font-family: Arial, Tahoma, sans-serif;
+
+            transition:
+                opacity 0.25s ease,
+                visibility 0.25s ease;
+        }
+
+        #loading.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .loader {
+            width: 42px;
+            height: 42px;
+
+            border: 3px solid rgba(255,255,255,.15);
+            border-top-color: #fff;
+
+            border-radius: 50%;
+
+            animation: spin .8s linear infinite;
+        }
+
+        #loading-text {
+            font-size: 14px;
+            opacity: .7;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* =========================
+           ERROR
+        ========================== */
+
+        #error {
+            position: fixed;
+            inset: 0;
+
+            z-index: 9999;
+
+            display: none;
+
+            align-items: center;
+            justify-content: center;
+
+            padding:
+                max(24px, env(safe-area-inset-top))
+                max(24px, env(safe-area-inset-right))
+                max(24px, env(safe-area-inset-bottom))
+                max(24px, env(safe-area-inset-left));
+
+            background: #000;
+            color: #fff;
+
+            text-align: center;
+
+            font-family:
+                Arial,
+                Tahoma,
+                sans-serif;
+        }
+
+        #error.visible {
+            display: flex;
+        }
+
+        #error-box {
+            width: 100%;
+            max-width: 520px;
+
+            line-height: 1.8;
+        }
+
+        #error-title {
+            margin-bottom: 10px;
+
+            font-size: clamp(20px, 5vw, 24px);
+            font-weight: 700;
+        }
+
+        #error-text {
+            margin-bottom: 22px;
+
+            font-size: clamp(13px, 3.5vw, 15px);
+
+            opacity: .65;
+        }
+
+        #retry {
+            min-width: 150px;
+
+            padding: 12px 24px;
+
+            border: 1px solid rgba(255,255,255,.2);
+            border-radius: 10px;
+
+            background: rgba(255,255,255,.07);
+            color: #fff;
+
+            font-size: 15px;
+            font-family: inherit;
+
+            cursor: pointer;
+
+            touch-action: manipulation;
+        }
+
+        #retry:hover {
+            background: rgba(255,255,255,.12);
+        }
+
+        #retry:active {
+            transform: scale(.97);
+        }
+
+        /* أجهزة ذات شاشة صغيرة جدًا */
+
+        @media (max-width: 400px) {
+
+            #error {
+                padding: 18px;
+            }
+
+            .loader {
+                width: 36px;
+                height: 36px;
+            }
+        }
+
+        /* الوضع الأفقي */
+
+        @media (orientation: landscape) {
+
+            #loading {
+                gap: 12px;
+            }
+        }
+
+        /* تقليل الحركة */
+
+        @media (prefers-reduced-motion: reduce) {
+
+            #site,
+            #loading {
+                transition: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="app">
+
+    <iframe
+        id="site"
+
+        src="http://82.47.102.123:3000/BlackCode/"
+
+        title="BlackCode"
+
+        allow="
+            fullscreen;
+            autoplay;
+            clipboard-read;
+            clipboard-write;
+            microphone;
+            camera;
+            geolocation
+        "
+
+        allowfullscreen
+
+        loading="eager"
+
+        referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+
+</div>
+
+
+<div id="loading">
+
+    <div class="loader"></div>
+
+    <div id="loading-text">
+        جاري تحميل BlackCode...
+    </div>
+
+</div>
+
+
+<div id="error">
+
+    <div id="error-box">
+
+        <div id="error-title">
+            تعذر تحميل BlackCode
+        </div>
+
+        <div id="error-text">
+            تعذر الوصول إلى الخادم.
+            تحقق من اتصالك بالإنترنت ثم حاول مرة أخرى.
+        </div>
+
+        <button id="retry" type="button">
+            إعادة المحاولة
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+(() => {
+
+    "use strict";
+
+
+    /* =========================
+       CONFIG
+    ========================== */
+
+    const SITE_URL =
+        "http://82.47.102.123:3000/BlackCode/";
+
+    const SITE_ORIGIN =
+        "http://82.47.102.123:3000";
+
+    const LOAD_TIMEOUT = 20000;
+
+
+    /* =========================
+       ELEMENTS
+    ========================== */
+
+    const iframe =
+        document.getElementById("site");
+
+    const loading =
+        document.getElementById("loading");
+
+    const error =
+        document.getElementById("error");
+
+    const retry =
+        document.getElementById("retry");
+
+
+    let loaded = false;
+    let timer = null;
+
+
+    /* =========================
+       SCREEN HEIGHT FIX
+    ========================== */
+
+    function updateViewport() {
+
+        const height =
+            window.visualViewport
+                ? window.visualViewport.height
+                : window.innerHeight;
+
+        document.documentElement.style
+            .setProperty(
+                "--app-height",
+                height + "px"
+            );
+    }
+
+
+    updateViewport();
+
+
+    window.addEventListener(
+        "resize",
+        updateViewport
+    );
+
+
+    window.addEventListener(
+        "orientationchange",
+        () => {
+
+            setTimeout(
+                updateViewport,
+                150
+            );
+
+        }
+    );
+
+
+    if (window.visualViewport) {
+
+        window.visualViewport.addEventListener(
+            "resize",
+            updateViewport
+        );
+    }
+
+
+    /* =========================
+       LOADING
+    ========================== */
+
+    function startTimer() {
+
+        clearTimeout(timer);
+
+        timer = setTimeout(() => {
+
+            if (!loaded) {
+                showError();
+            }
+
+        }, LOAD_TIMEOUT);
+    }
+
+
+    function showLoading() {
+
+        loaded = false;
+
+        error.classList.remove("visible");
+
+        loading.classList.remove("hidden");
+
+        iframe.classList.remove("ready");
+
+        startTimer();
+    }
+
+
+    function showSite() {
+
+        loaded = true;
+
+        clearTimeout(timer);
+
+        error.classList.remove("visible");
+
+        iframe.classList.add("ready");
+
+        loading.classList.add("hidden");
+    }
+
+
+    function showError() {
+
+        clearTimeout(timer);
+
+        iframe.classList.remove("ready");
+
+        loading.classList.add("hidden");
+
+        error.classList.add("visible");
+    }
+
+
+    /* =========================
+       RELOAD
+    ========================== */
+
+    function reloadSite() {
+
+        showLoading();
+
+        const separator =
+            SITE_URL.includes("?")
+                ? "&"
+                : "?";
+
+        iframe.src =
+            SITE_URL +
+            separator +
+            "_reload=" +
+            Date.now();
+    }
+
+
+    retry.addEventListener(
+        "click",
+        reloadSite
+    );
+
+
+    /* =========================
+       IFRAME EVENTS
+    ========================== */
+
+    iframe.addEventListener(
+        "load",
+        () => {
+
+            showSite();
+
+        }
+    );
+
+
+    /* =========================
+       NETWORK
+    ========================== */
+
+    window.addEventListener(
+        "offline",
+        () => {
+
+            showError();
+
+        }
+    );
+
+
+    window.addEventListener(
+        "online",
+        () => {
+
+            reloadSite();
+
+        }
+    );
+
+
+    /* =========================
+       MESSAGES FROM BLACKCODE
+    ========================== */
+
+    window.addEventListener(
+        "message",
+        async (event) => {
+
+            if (
+                event.origin !== SITE_ORIGIN
+            ) {
+                return;
+            }
+
+
+            if (
+                event.source !==
+                iframe.contentWindow
+            ) {
+                return;
+            }
+
+
+            if (
+                event.data ===
+                "blackcode-loaded"
+            ) {
+
+                showSite();
+
+                return;
+            }
+
+
+            if (
+                event.data ===
+                "blackcode-fullscreen"
+            ) {
+
+                try {
+
+                    if (
+                        !document.fullscreenElement &&
+                        iframe.requestFullscreen
+                    ) {
+
+                        await iframe
+                            .requestFullscreen();
+                    }
+
+                } catch (_) {}
+
+            }
+
+        }
+    );
+
+
+    /* =========================
+       START
+    ========================== */
+
+    showLoading();
+
+
+})();
+</script>
+
+</body>
+</html>
