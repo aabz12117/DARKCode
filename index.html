@@ -91,10 +91,6 @@
             opacity: 1;
         }
 
-        /* =========================
-           LOADING
-        ========================== */
-
         #loading {
             position: fixed;
             inset: 0;
@@ -150,10 +146,6 @@
                 transform: rotate(360deg);
             }
         }
-
-        /* =========================
-           ERROR
-        ========================== */
 
         #error {
             position: fixed;
@@ -236,8 +228,6 @@
             transform: scale(.97);
         }
 
-        /* أجهزة ذات شاشة صغيرة جدًا */
-
         @media (max-width: 400px) {
 
             #error {
@@ -250,16 +240,12 @@
             }
         }
 
-        /* الوضع الأفقي */
-
         @media (orientation: landscape) {
 
             #loading {
                 gap: 12px;
             }
         }
-
-        /* تقليل الحركة */
 
         @media (prefers-reduced-motion: reduce) {
 
@@ -278,7 +264,7 @@
     <iframe
         id="site"
 
-        src="http://82.47.102.123:3000/BlackCode/"
+        src="https://shadows-elder-heater-periodic.trycloudflare.com/BlackCode/"
 
         title="BlackCode"
 
@@ -296,11 +282,10 @@
 
         loading="eager"
 
-        referrerpolicy="no-referrer-when-downgrade">
+        referrerpolicy="no-referrer">
     </iframe>
 
 </div>
-
 
 <div id="loading">
 
@@ -311,7 +296,6 @@
     </div>
 
 </div>
-
 
 <div id="error">
 
@@ -334,29 +318,18 @@
 
 </div>
 
-
 <script>
 (() => {
 
     "use strict";
 
-
-    /* =========================
-       CONFIG
-    ========================== */
-
     const SITE_URL =
-        "http://82.47.102.123:3000/BlackCode/";
+        "https://shadows-elder-heater-periodic.trycloudflare.com/BlackCode/";
 
     const SITE_ORIGIN =
-        "http://82.47.102.123:3000";
+        "https://shadows-elder-heater-periodic.trycloudflare.com";
 
     const LOAD_TIMEOUT = 20000;
-
-
-    /* =========================
-       ELEMENTS
-    ========================== */
 
     const iframe =
         document.getElementById("site");
@@ -370,14 +343,8 @@
     const retry =
         document.getElementById("retry");
 
-
     let loaded = false;
     let timer = null;
-
-
-    /* =========================
-       SCREEN HEIGHT FIX
-    ========================== */
 
     function updateViewport() {
 
@@ -393,15 +360,12 @@
             );
     }
 
-
     updateViewport();
-
 
     window.addEventListener(
         "resize",
         updateViewport
     );
-
 
     window.addEventListener(
         "orientationchange",
@@ -415,7 +379,6 @@
         }
     );
 
-
     if (window.visualViewport) {
 
         window.visualViewport.addEventListener(
@@ -423,11 +386,6 @@
             updateViewport
         );
     }
-
-
-    /* =========================
-       LOADING
-    ========================== */
 
     function startTimer() {
 
@@ -442,7 +400,6 @@
         }, LOAD_TIMEOUT);
     }
 
-
     function showLoading() {
 
         loaded = false;
@@ -455,7 +412,6 @@
 
         startTimer();
     }
-
 
     function showSite() {
 
@@ -470,7 +426,6 @@
         loading.classList.add("hidden");
     }
 
-
     function showError() {
 
         clearTimeout(timer);
@@ -481,11 +436,6 @@
 
         error.classList.add("visible");
     }
-
-
-    /* =========================
-       RELOAD
-    ========================== */
 
     function reloadSite() {
 
@@ -503,16 +453,10 @@
             Date.now();
     }
 
-
     retry.addEventListener(
         "click",
         reloadSite
     );
-
-
-    /* =========================
-       IFRAME EVENTS
-    ========================== */
 
     iframe.addEventListener(
         "load",
@@ -523,11 +467,6 @@
         }
     );
 
-
-    /* =========================
-       NETWORK
-    ========================== */
-
     window.addEventListener(
         "offline",
         () => {
@@ -537,7 +476,6 @@
         }
     );
 
-
     window.addEventListener(
         "online",
         () => {
@@ -546,11 +484,6 @@
 
         }
     );
-
-
-    /* =========================
-       MESSAGES FROM BLACKCODE
-    ========================== */
 
     window.addEventListener(
         "message",
@@ -562,14 +495,12 @@
                 return;
             }
 
-
             if (
                 event.source !==
                 iframe.contentWindow
             ) {
                 return;
             }
-
 
             if (
                 event.data ===
@@ -580,7 +511,6 @@
 
                 return;
             }
-
 
             if (
                 event.data ===
@@ -605,13 +535,7 @@
         }
     );
 
-
-    /* =========================
-       START
-    ========================== */
-
     showLoading();
-
 
 })();
 </script>
